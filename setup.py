@@ -7,7 +7,7 @@ README = (BASEDIR / "README.md").read_text()
 setup(
     name="Stack Frame Analyser",
     python_requires=">3.6",
-    version="0.1.0",
+    version="0.1.1",
     description="It helps to get the context of a frame from the caller's stack. Can be used to improve service and microservice logs.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -16,7 +16,7 @@ setup(
     author="Cesar Merjan",
     author_email="cesarmerjan@gmail.com",
     keywords=["logging", "stack", "frame"],
-    license="Apache License 2.0",
+    license="MIT",
     include_package_data=True,
     package_dir={"": "src"},
     packages=["stack_frame_analyzer"],
