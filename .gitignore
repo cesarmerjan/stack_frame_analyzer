@@ -47,3 +47,5 @@ __pypackages__/
 
 .venv
 **/.vscode/
+
+notes.txt

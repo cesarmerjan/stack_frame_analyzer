@@ -1,4 +1,5 @@
 import unittest
+
 from .utils.baz import Baz
 
 
@@ -7,7 +8,7 @@ class TestStackFrameAnalyzer(unittest.TestCase):
         self.baz = Baz()
 
     def test_on_method(self):
-        expected_context = "stack_frame_analyzer:tests.stack_frame_analyzer.utils:baz:Baz:get_baz(self=<instance>, baz=baz)"
+        expected_context = "stack_frame_analyzer:tests.stack_frame_analyzer.utils:baz:Baz:get_baz(self=<instance>, baz=baz)"  # noqa
         context = self.baz.get_baz("baz")
         self.assertEqual(context, expected_context)
 

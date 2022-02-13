@@ -1,1 +1,1 @@
-from .stack_frame_analyzer.main import StackFrameAnalyzer
+from .stack_frame_analyzer import StackFrameAnalyzer

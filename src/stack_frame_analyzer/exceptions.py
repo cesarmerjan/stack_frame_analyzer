@@ -6,7 +6,9 @@ class InvalidFrameDepth(ValueError):
     """
 
     def __init__(self) -> "InvalidFrameDepth":
-        self.message = "Invalid stack_frame_depth input value. It must be a natural number."
+        self.message = (
+            "Invalid stack_frame_depth input value. It must be a natural number."
+        )
         super().__init__(self.message)
 
     def __str__(self):
@@ -21,7 +23,9 @@ class FrameDepthOutOfRange(ValueError):
     """
 
     def __init__(self) -> "InvalidFrameDepth":
-        self.message = "Caller's stack is not deep enough. stack_frame_depth is out of range."
+        self.message = (
+            "Caller's stack is not deep enough. stack_frame_depth is out of range."
+        )
         super().__init__(self.message)
 
     def __str__(self):
@@ -36,7 +40,9 @@ class StackFrameAnalyzerException(Exception):
     """
 
     def __init__(self) -> "InvalidFrameDepth":
-        self.message = "Internal error from get_frame_context method of StackFrameAnalyzer class."
+        self.message = (
+            "Internal error from get_frame_context method of StackFrameAnalyzer class."
+        )
         super().__init__(self.message)
 
     def __str__(self):

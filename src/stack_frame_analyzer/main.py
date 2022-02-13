@@ -1,11 +1,10 @@
 """This module was created to help improve the quality of application logs.
 
-This module only uses buildin libraries, therefore, it has no external dependency.
+It's only uses building libraries, therefore, it has no external dependency.
 It is also lightweight and thread-safe, which makes it ideal for use in services and microservices.
 
 However, the module has some limitations.
 The most important thing to note in this scenario is that it only works with the CPython implementation.
-That's because it uses the sys._getframe function. 
 
 Typical usage example:
 
@@ -18,7 +17,7 @@ stack_frame_analyzer = StackFrameAnalyzer("my_service_name")
 def foo(bar):
     try:
         ...
-    except:
+    except Exception as error:
         context = stack_frame_analyzer.get_frame_context()
         logging.error(context)
 
@@ -70,12 +69,17 @@ def foo(bar):
 
 """
 
+import inspect
 import os
 import sys
-import inspect
-from typing import Tuple
 from types import FrameType
-from .exceptions import InvalidFrameDepth, FrameDepthOutOfRange, StackFrameAnalyzerException
+from typing import Tuple
+
+from .exceptions import (
+    FrameDepthOutOfRange,
+    InvalidFrameDepth,
+    StackFrameAnalyzerException,
+)
 
 
 class StackFrameAnalyzer:
@@ -110,12 +114,17 @@ class StackFrameAnalyzer:
         "project_name",
         "instance_representation_name",
         "class_representation_name",
-        "context_structure"
+        "context_structure",
     )
 
     PROJECT_NAME: str = os.path.split(os.path.abspath(os.curdir))[-1]
 
-    def __init__(self, project_name: str = None, instance_representation_name: str = "self", class_representation_name: str = "cls") -> "StackFrameAnalyzer":
+    def __init__(
+        self,
+        project_name: str = None,
+        instance_representation_name: str = "self",
+        class_representation_name: str = "cls",
+    ) -> "StackFrameAnalyzer":
         self.project_name = project_name or self.PROJECT_NAME
         self.instance_representation_name = instance_representation_name
         self.class_representation_name = class_representation_name
@@ -136,11 +145,9 @@ class StackFrameAnalyzer:
         return package, module
 
     def _get_class_name(self, frame: FrameType) -> str:
-        instance_representation = frame.f_locals.get(
-            self.instance_representation_name)
+        instance_representation = frame.f_locals.get(self.instance_representation_name)
 
-        class_representation = frame.f_locals.get(
-            self.class_representation_name)
+        class_representation = frame.f_locals.get(self.class_representation_name)
 
         if instance_representation and not class_representation:
             class_name = instance_representation.__class__.__name__
@@ -182,14 +189,21 @@ class StackFrameAnalyzer:
         del args_info
         return arguments_string
 
-    def _build_context(self, package: str, module: str, class_name: str, callable_name: str, arguments: str) -> str:
+    def _build_context(
+        self,
+        package: str,
+        module: str,
+        class_name: str,
+        callable_name: str,
+        arguments: str,
+    ) -> str:
         context = self.context_structure.format(
             project_name=self.project_name,
             package=package,
             module=module,
             class_name=class_name,
             callable_name=callable_name,
-            arguments=arguments
+            arguments=arguments,
         )
         return context
 
@@ -220,8 +234,8 @@ class StackFrameAnalyzer:
 
         try:
             frame = sys._getframe(stack_frame_depth)
-        except:
-            raise FrameDepthOutOfRange
+        except ValueError as error:
+            raise FrameDepthOutOfRange from error
 
         try:
             package, module = self._get_package_and_module(frame)
@@ -230,14 +244,12 @@ class StackFrameAnalyzer:
             arguments = self._get_callable_arguments(frame)
 
             context = self._build_context(
-                package, module,
-                class_name, callable_name,
-                arguments)
+                package, module, class_name, callable_name, arguments
+            )
 
             return context
 
         except Exception as error:
-            print(error)
             raise StackFrameAnalyzerException from error
             return ""
 

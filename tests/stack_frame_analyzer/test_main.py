@@ -1,6 +1,6 @@
 import unittest
-from src import StackFrameAnalyzer
-from .utils.foo import foo
+
+from stack_frame_analyzer import StackFrameAnalyzer
 
 
 class TestStackFrameAnalyzer(unittest.TestCase):
@@ -11,9 +11,6 @@ class TestStackFrameAnalyzer(unittest.TestCase):
         self.assertIsInstance(self.stack_frame_analyzer, StackFrameAnalyzer)
 
     def test_default_parameters(self):
-        self.assertEqual(self.stack_frame_analyzer.project_name,
-                         "stack_frame_analyzer")
-        self.assertEqual(
-            self.stack_frame_analyzer.instance_representation_name, "self")
-        self.assertEqual(
-            self.stack_frame_analyzer.class_representation_name, "cls")
+        self.assertEqual(self.stack_frame_analyzer.project_name, "stack_frame_analyzer")
+        self.assertEqual(self.stack_frame_analyzer.instance_representation_name, "self")
+        self.assertEqual(self.stack_frame_analyzer.class_representation_name, "cls")

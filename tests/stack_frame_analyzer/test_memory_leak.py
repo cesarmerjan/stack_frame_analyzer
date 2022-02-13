@@ -1,11 +1,11 @@
 import tracemalloc
 import unittest
+
 from .utils.main import stack_frame_analyzer
 from .utils.memory_leak import BadClass
 
 
 class TestStackFrameAnalyzer(unittest.TestCase):
-
     def setUp(self):
         self.stack_frame_analyzer_package_module_name = "stack_frame_analyzer/main.py"
         self.memory_leak_package_module_name = "utils/memory_leak.py"
@@ -30,9 +30,9 @@ class TestStackFrameAnalyzer(unittest.TestCase):
 
         snapshot3 = tracemalloc.take_snapshot()
 
-        snapshot_diff_1_2 = snapshot2.compare_to(snapshot1, 'lineno')
+        snapshot_diff_1_2 = snapshot2.compare_to(snapshot1, "lineno")
 
-        snapshot_diff_2_3 = snapshot3.compare_to(snapshot2, 'lineno')
+        snapshot_diff_2_3 = snapshot3.compare_to(snapshot2, "lineno")
 
         for stat in snapshot_diff_1_2:
             if self.stack_frame_analyzer_package_module_name in str(stat.traceback):
@@ -66,28 +66,31 @@ class TestStackFrameAnalyzer(unittest.TestCase):
 
                 if last_day_snapshot:
                     snapshot_diff = actual_day_snapshot.compare_to(
-                        last_day_snapshot, 'lineno')
+                        last_day_snapshot, "lineno"
+                    )
 
                     memory_diff_of_memory_leak = 0
                     memory_diff_of_stack_frame_analyzer = 0
                     for stat in snapshot_diff:
                         if self.memory_leak_package_module_name in str(stat.traceback):
                             memory_diff_of_memory_leak = max(
-                                stat.size_diff,
-                                memory_diff_of_memory_leak
+                                stat.size_diff, memory_diff_of_memory_leak
                             )
 
-                        if self.stack_frame_analyzer_package_module_name in str(stat.traceback):
+                        if self.stack_frame_analyzer_package_module_name in str(
+                            stat.traceback
+                        ):
                             memory_diff_of_stack_frame_analyzer = max(
-                                stat.size_diff,
-                                memory_diff_of_stack_frame_analyzer
+                                stat.size_diff, memory_diff_of_stack_frame_analyzer
                             )
 
                     self.assertGreaterEqual(
-                        memory_diff_of_memory_leak, self.one_megabyte)
+                        memory_diff_of_memory_leak, self.one_megabyte
+                    )
 
                     self.assertLessEqual(
-                        memory_diff_of_stack_frame_analyzer, self.one_kilobyte)
+                        memory_diff_of_stack_frame_analyzer, self.one_kilobyte
+                    )
 
                 last_day_snapshot = actual_day_snapshot
 

@@ -1,11 +1,14 @@
 import unittest
-from .utils.foo import foo
+
 from .utils.bar import bar
+from .utils.foo import foo
 
 
 class TestStackFrameAnalyzer(unittest.TestCase):
     def setUp(self):
-        self.expected_context = "stack_frame_analyzer:tests.stack_frame_analyzer.utils:foo::foo(baz=baz)"
+        self.expected_context = (
+            "stack_frame_analyzer:tests.stack_frame_analyzer.utils:foo::foo(baz=baz)"
+        )
 
     def test_on_function(self):
         context = foo("baz")
