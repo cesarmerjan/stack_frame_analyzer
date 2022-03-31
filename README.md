@@ -8,10 +8,10 @@ However, the module has some limitations.
 The most important thing to note in this scenario is that it only works with the **CPython** implementation.
 
 The returned context is formatted according to the following pattern:
-    **project_name:package_name:module_name:class_name:callable_name(callable_arguments)**
+    *project_name:package_name:module_name:class_name:callable_name(callable_arguments)*
 
 An example of the context returned could be:
-    **authentication_service:src.domain.user:model:UserModel:has_permission(self=..., permission="add_user")**
+    *authentication_service:src.domain.user:model:UserModel:has_permission(self=..., permission="add_user")*
 
 ## Typical usage example:
 

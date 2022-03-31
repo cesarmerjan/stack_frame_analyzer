@@ -5,9 +5,9 @@ BASEDIR = pathlib.Path(__file__).parent
 README = (BASEDIR / "README.md").read_text()
 
 setup(
-    name="Stack Frame Analyser",
+    name="Stack Frame Analyzer",
     python_requires=">3.6",
-    version="0.1.1",
+    version="0.1.2",
     description="It helps to get the context of a frame from the caller's stack. Can be used to improve service and microservice logs.",
     long_description=README,
     long_description_content_type="text/markdown",
