@@ -40,9 +40,10 @@ class TestStackFrameAnalyzer(unittest.TestCase):
                 self.assertLessEqual(stat.count_diff, 2)
 
         for stat in snapshot_diff_2_3:
-            if self.stack_frame_analyzer_package_module_name in str(stat.traceback):
-                self.assertLessEqual(stat.size_diff, self.one_kilobyte)
-                self.assertLessEqual(stat.count_diff, 2)
+            self.assertNotIn(
+                self.stack_frame_analyzer_package_module_name,
+                str(stat.traceback)
+            )
 
         tracemalloc.clear_traces()
 
