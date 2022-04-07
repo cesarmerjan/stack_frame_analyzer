@@ -130,13 +130,31 @@ class StackFrameAnalyzer:
         self.class_representation_name = class_representation_name
         self.context_structure = "{project_name}:{package}:{module}:{class_name}:{callable_name}({arguments})"
 
+    def _get_frame(self, stack_frame_depth: int) -> FrameType:
+        """Get a frame from the caller stack.
+
+        Args:
+            stack_frame_depth (int): Frame index below the top of the caller's stack.
+
+        Raises:
+            FrameDepthOutOfRange: Caller's stack is not deep enough.
+
+        Returns:
+            FrameType: built-in FrameType
+        """
+        try:
+            frame = sys._getframe(stack_frame_depth)
+        except ValueError as error:
+            raise FrameDepthOutOfRange from error
+        return frame
+
     def _get_package_and_module(self, frame: FrameType) -> Tuple[str, str]:
         module_obj = inspect.getmodule(frame)
 
         if not module_obj:
             return "", ""
 
-        if module_obj.__name__ == "__main__":
+        if module_obj.__name__ == "__main__":  # pragma: no cover
             module = module_obj.__file__.split(".")[0]
             return "", module
 
@@ -161,7 +179,7 @@ class StackFrameAnalyzer:
     def _get_callable_name(self, frame: FrameType) -> str:
         callable_name = frame.f_code.co_name
 
-        if callable_name == "<module>":
+        if callable_name == "<module>":  # pragma: no cover
             return ""
 
         return callable_name
@@ -232,10 +250,7 @@ class StackFrameAnalyzer:
         if not isinstance(stack_frame_depth, int) or stack_frame_depth < 0:
             raise InvalidFrameDepth
 
-        try:
-            frame = sys._getframe(stack_frame_depth)
-        except ValueError as error:
-            raise FrameDepthOutOfRange from error
+        frame = self._get_frame(stack_frame_depth+1)
 
         try:
             package, module = self._get_package_and_module(frame)
@@ -249,9 +264,8 @@ class StackFrameAnalyzer:
 
             return context
 
-        except Exception as error:
+        except Exception as error:  # pragma: no cover
             raise StackFrameAnalyzerException from error
-            return ""
 
         finally:
             del frame
