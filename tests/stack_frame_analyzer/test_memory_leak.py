@@ -41,8 +41,7 @@ class TestStackFrameAnalyzer(unittest.TestCase):
 
         for stat in snapshot_diff_2_3:
             self.assertNotIn(
-                self.stack_frame_analyzer_package_module_name,
-                str(stat.traceback)
+                self.stack_frame_analyzer_package_module_name, str(stat.traceback)
             )
 
         tracemalloc.clear_traces()

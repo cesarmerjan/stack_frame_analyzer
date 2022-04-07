@@ -250,7 +250,7 @@ class StackFrameAnalyzer:
         if not isinstance(stack_frame_depth, int) or stack_frame_depth < 0:
             raise InvalidFrameDepth
 
-        frame = self._get_frame(stack_frame_depth+1)
+        frame = self._get_frame(stack_frame_depth + 1)
 
         try:
             package, module = self._get_package_and_module(frame)

@@ -1,0 +1,5 @@
+coverage
+isort
+flake8
+black
+twine

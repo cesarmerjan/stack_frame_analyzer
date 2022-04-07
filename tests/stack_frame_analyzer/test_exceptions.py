@@ -1,5 +1,10 @@
-from src.stack_frame_analyzer.exceptions import InvalidFrameDepth, FrameDepthOutOfRange, StackFrameAnalyzerException
 import unittest
+
+from src.stack_frame_analyzer.exceptions import (
+    FrameDepthOutOfRange,
+    InvalidFrameDepth,
+    StackFrameAnalyzerException,
+)
 
 
 class TestStackFrameAnalyzer(unittest.TestCase):

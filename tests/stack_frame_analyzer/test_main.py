@@ -1,7 +1,8 @@
-import unittest
 import inspect
+import unittest
+
 from src.stack_frame_analyzer import StackFrameAnalyzer
-from src.stack_frame_analyzer.exceptions import FrameDepthOutOfRange, InvalidFrameDepth, StackFrameAnalyzerException
+from src.stack_frame_analyzer.exceptions import FrameDepthOutOfRange, InvalidFrameDepth
 
 
 class TestStackFrameAnalyzer(unittest.TestCase):
@@ -13,7 +14,10 @@ class TestStackFrameAnalyzer(unittest.TestCase):
 
     def test_default_parameters(self):
         self.assertEqual(self.stack_frame_analyzer.project_name, "stack_frame_analyzer")
-        self.assertEqual(self.stack_frame_analyzer.project_name, self.stack_frame_analyzer.PROJECT_NAME)
+        self.assertEqual(
+            self.stack_frame_analyzer.project_name,
+            self.stack_frame_analyzer.PROJECT_NAME,
+        )
         self.assertEqual(self.stack_frame_analyzer.instance_representation_name, "self")
         self.assertEqual(self.stack_frame_analyzer.class_representation_name, "cls")
 
@@ -22,19 +26,15 @@ class TestStackFrameAnalyzer(unittest.TestCase):
         instance_representation = "instance"
         class_representation = "this_class"
         stack_frame_analyzer = StackFrameAnalyzer(
-            project_name,
-            instance_representation,
-            class_representation
+            project_name, instance_representation, class_representation
         )
 
         self.assertEqual(project_name, stack_frame_analyzer.project_name)
         self.assertEqual(
-            instance_representation,
-            stack_frame_analyzer.instance_representation_name
+            instance_representation, stack_frame_analyzer.instance_representation_name
         )
         self.assertEqual(
-            class_representation,
-            stack_frame_analyzer.class_representation_name
+            class_representation, stack_frame_analyzer.class_representation_name
         )
 
     def test_get_frame(self):
@@ -48,7 +48,9 @@ class TestStackFrameAnalyzer(unittest.TestCase):
 
     def test_get_package_and_module(self):
         current_frame = inspect.currentframe()
-        package, module = self.stack_frame_analyzer._get_package_and_module(current_frame)
+        package, module = self.stack_frame_analyzer._get_package_and_module(
+            current_frame
+        )
 
         self.assertEqual(package, "tests.stack_frame_analyzer")
         self.assertEqual(module, "test_main")
@@ -69,7 +71,7 @@ class TestStackFrameAnalyzer(unittest.TestCase):
         args = {
             "project_name": "stack_frame_analyzer",
             "instance_representation_name": "self",
-            "class_representation_name": "cls"
+            "class_representation_name": "cls",
         }
 
         args_string = self.stack_frame_analyzer._stringfy_armguments(args)
@@ -91,10 +93,11 @@ class TestStackFrameAnalyzer(unittest.TestCase):
             "test_main",
             "TestStackFrameAnalyzer",
             "test_build_context",
-            "self=<instance>"
+            "self=<instance>",
         )
 
-        expected_context = "stack_frame_analyzer:tests.stack_frame_analyzer:test_main:TestStackFrameAnalyzer:test_build_context(self=<instance>)"
+        expected_context = "stack_frame_analyzer:tests.stack_frame_analyzer:test_main:"
+        expected_context += "TestStackFrameAnalyzer:test_build_context(self=<instance>)"
 
         self.assertEqual(context, expected_context)
 
