@@ -79,7 +79,7 @@ from typing import Tuple
 from .exceptions import (
     FrameDepthOutOfRange,
     InvalidClassRepresentationNameType,
-    InvalidFrameDepth,
+    InvalidCallerDepth,
     InvalidInstanceRepresentationNameType,
     InvalidProjectNameType,
     StackFrameAnalyzerException,
@@ -282,7 +282,7 @@ class StackFrameAnalyzer:
             depth_in_the_stack (int):  Depth of the caller in the stack. Defaults is 0.
 
         Raises:
-            InvalidFrameDepth: Invalid stack_frame_depth input value.
+            InvalidCallerDepth: Invalid depth_in_the_stack input value.
             FrameDepthOutOfRange: Caller's stack is not deep enough.
             StackFrameAnalyzerException: Internal error.
 
@@ -291,7 +291,7 @@ class StackFrameAnalyzer:
         """
 
         if not isinstance(depth_in_the_stack, int) or depth_in_the_stack < 0:
-            raise InvalidFrameDepth
+            raise InvalidCallerDepth
 
         stack_frame_depth = depth_in_the_stack + 2
 

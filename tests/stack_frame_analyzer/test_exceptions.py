@@ -3,7 +3,7 @@ import unittest
 from src.stack_frame_analyzer.exceptions import (
     FrameDepthOutOfRange,
     InvalidClassRepresentationNameType,
-    InvalidFrameDepth,
+    InvalidCallerDepth,
     InvalidInstanceRepresentationNameType,
     InvalidProjectNameType,
     StackFrameAnalyzerException,
@@ -12,7 +12,7 @@ from src.stack_frame_analyzer.exceptions import (
 
 class TestStackFrameAnalyzer(unittest.TestCase):
     def test_invalid_frame_depth_exception(self):
-        expt = InvalidFrameDepth()
+        expt = InvalidCallerDepth()
         self.assertIsInstance(expt.message, str)
         self.assertEqual(str(expt), expt.message)
 

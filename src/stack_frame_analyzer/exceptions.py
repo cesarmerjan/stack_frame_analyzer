@@ -5,7 +5,7 @@ class InvalidProjectNameType(ValueError):
         message: explanation of the error
     """
 
-    def __init__(self) -> "InvalidFrameDepth":
+    def __init__(self) -> "InvalidProjectNameType":
         self.message = "Invalid project_name input value. It must be a string."
         super().__init__(self.message)
 
@@ -20,7 +20,7 @@ class InvalidInstanceRepresentationNameType(ValueError):
         message: explanation of the error
     """
 
-    def __init__(self) -> "InvalidFrameDepth":
+    def __init__(self) -> "InvalidInstanceRepresentationNameType":
         self.message = (
             "Invalid instance_representation_name input value. It must be a string."
         )
@@ -37,7 +37,7 @@ class InvalidClassRepresentationNameType(ValueError):
         message: explanation of the error
     """
 
-    def __init__(self) -> "InvalidFrameDepth":
+    def __init__(self) -> "InvalidClassRepresentationNameType":
         self.message = (
             "Invalid class_representation_name input value. It must be a string."
         )
@@ -47,16 +47,16 @@ class InvalidClassRepresentationNameType(ValueError):
         return f"{self.message}"
 
 
-class InvalidFrameDepth(ValueError):
-    """Exception raised for errors in get_caller_context method of StackFrameAnalyzer class.
+class InvalidCallerDepth(ValueError):
+    """Exception raised for errors in the input value of depth_in_the_stack argument in the method get_caller_context of StackFrameAnalyzer class.
 
     Args:
         message: explanation of the error
     """
 
-    def __init__(self) -> "InvalidFrameDepth":
+    def __init__(self) -> "InvalidCallerDepth":
         self.message = (
-            "Invalid stack_frame_depth input value. It must be a natural number."
+            "Invalid depth_in_the_stack input value. It must be a natural number."
         )
         super().__init__(self.message)
 
@@ -71,7 +71,7 @@ class FrameDepthOutOfRange(ValueError):
         message: explanation of the error
     """
 
-    def __init__(self) -> "InvalidFrameDepth":
+    def __init__(self) -> "FrameDepthOutOfRange":
         self.message = (
             "Caller's stack is not deep enough. stack_frame_depth is out of range."
         )
@@ -88,7 +88,7 @@ class StackFrameAnalyzerException(Exception):
         message: explanation of the error
     """
 
-    def __init__(self) -> "InvalidFrameDepth":
+    def __init__(self) -> "StackFrameAnalyzerException":
         self.message = (
             "Internal error from get_caller_context method of StackFrameAnalyzer class."
         )

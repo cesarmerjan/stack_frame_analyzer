@@ -5,7 +5,7 @@ from src.stack_frame_analyzer import StackFrameAnalyzer
 from src.stack_frame_analyzer.exceptions import (
     FrameDepthOutOfRange,
     InvalidClassRepresentationNameType,
-    InvalidFrameDepth,
+    InvalidCallerDepth,
     InvalidInstanceRepresentationNameType,
     InvalidProjectNameType,
 )
@@ -112,24 +112,24 @@ class TestStackFrameAnalyzer(unittest.TestCase):
             self.stack_frame_analyzer.get_caller_context(100)
 
     def test_invalid_frame_depth(self):
-        with self.assertRaises(InvalidFrameDepth):
+        with self.assertRaises(InvalidCallerDepth):
             self.stack_frame_analyzer.get_caller_context(-1)
 
-        with self.assertRaises(InvalidFrameDepth):
+        with self.assertRaises(InvalidCallerDepth):
             self.stack_frame_analyzer.get_caller_context(b"OK")
-        with self.assertRaises(InvalidFrameDepth):
+        with self.assertRaises(InvalidCallerDepth):
             self.stack_frame_analyzer.get_caller_context("2")
-        with self.assertRaises(InvalidFrameDepth):
+        with self.assertRaises(InvalidCallerDepth):
             self.stack_frame_analyzer.get_caller_context([])
-        with self.assertRaises(InvalidFrameDepth):
+        with self.assertRaises(InvalidCallerDepth):
             self.stack_frame_analyzer.get_caller_context({})
-        with self.assertRaises(InvalidFrameDepth):
+        with self.assertRaises(InvalidCallerDepth):
             self.stack_frame_analyzer.get_caller_context(set([]))
-        with self.assertRaises(InvalidFrameDepth):
+        with self.assertRaises(InvalidCallerDepth):
             self.stack_frame_analyzer.get_caller_context(1.2)
-        with self.assertRaises(InvalidFrameDepth):
+        with self.assertRaises(InvalidCallerDepth):
             self.stack_frame_analyzer.get_caller_context(lambda: "function")
-        with self.assertRaises(InvalidFrameDepth):
+        with self.assertRaises(InvalidCallerDepth):
             self.stack_frame_analyzer.get_caller_context(type("MyClass", (object,), {}))
 
     def test_for_project_name_set_error(self):
