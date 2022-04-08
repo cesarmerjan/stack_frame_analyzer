@@ -13,6 +13,11 @@ The returned context is formatted according to the following pattern:
 An example of the context returned could be:
     *authentication_service:src.domain.user:model:UserModel:has_permission(self=..., permission="add_user")*
 
+## Installation
+```console
+pip install Stack-Frame-Analyzer
+```
+
 ## Typical usage example:
 
 
