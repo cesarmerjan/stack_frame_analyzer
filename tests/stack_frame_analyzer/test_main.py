@@ -3,11 +3,11 @@ import unittest
 
 from src.stack_frame_analyzer import StackFrameAnalyzer
 from src.stack_frame_analyzer.exceptions import (
-    InvalidProjectNameType,
-    InvalidInstanceRepresentationNameType,
-    InvalidClassRepresentationNameType,
     FrameDepthOutOfRange,
-    InvalidFrameDepth
+    InvalidClassRepresentationNameType,
+    InvalidFrameDepth,
+    InvalidInstanceRepresentationNameType,
+    InvalidProjectNameType,
 )
 
 
@@ -164,7 +164,9 @@ class TestStackFrameAnalyzer(unittest.TestCase):
         with self.assertRaises(InvalidInstanceRepresentationNameType):
             StackFrameAnalyzer(instance_representation_name=lambda: "function")
         with self.assertRaises(InvalidInstanceRepresentationNameType):
-            StackFrameAnalyzer(instance_representation_name=type("MyClass", (object,), {}))
+            StackFrameAnalyzer(
+                instance_representation_name=type("MyClass", (object,), {})
+            )
         with self.assertRaises(InvalidInstanceRepresentationNameType):
             StackFrameAnalyzer(instance_representation_name=True)
 

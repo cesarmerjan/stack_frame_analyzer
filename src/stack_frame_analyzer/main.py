@@ -77,11 +77,11 @@ from types import FrameType
 from typing import Tuple
 
 from .exceptions import (
-    InvalidProjectNameType,
-    InvalidInstanceRepresentationNameType,
-    InvalidClassRepresentationNameType,
     FrameDepthOutOfRange,
+    InvalidClassRepresentationNameType,
     InvalidFrameDepth,
+    InvalidInstanceRepresentationNameType,
+    InvalidProjectNameType,
     StackFrameAnalyzerException,
 )
 
@@ -121,7 +121,9 @@ class StackFrameAnalyzer:
     )
 
     DEFAULT_PROJECT_NAME: str = os.path.split(os.path.abspath(os.curdir))[-1]
-    CONTEXT_STRUCTURE = "{project_name}:{package}:{module}:{class_name}:{callable_name}({arguments})"
+    CONTEXT_STRUCTURE = (
+        "{project_name}:{package}:{module}:{class_name}:{callable_name}({arguments})"
+    )
 
     def __init__(
         self,

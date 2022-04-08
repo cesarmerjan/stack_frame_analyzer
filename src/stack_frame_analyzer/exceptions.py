@@ -6,9 +6,7 @@ class InvalidProjectNameType(ValueError):
     """
 
     def __init__(self) -> "InvalidFrameDepth":
-        self.message = (
-            "Invalid project_name input value. It must be a string."
-        )
+        self.message = "Invalid project_name input value. It must be a string."
         super().__init__(self.message)
 
     def __str__(self):

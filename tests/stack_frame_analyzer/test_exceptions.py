@@ -1,11 +1,11 @@
 import unittest
 
 from src.stack_frame_analyzer.exceptions import (
-    InvalidProjectNameType,
-    InvalidInstanceRepresentationNameType,
-    InvalidClassRepresentationNameType,
     FrameDepthOutOfRange,
+    InvalidClassRepresentationNameType,
     InvalidFrameDepth,
+    InvalidInstanceRepresentationNameType,
+    InvalidProjectNameType,
     StackFrameAnalyzerException,
 )
 
