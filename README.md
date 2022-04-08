@@ -73,8 +73,6 @@ def foo(bar):
         logging.error(error.context)
 ```
 
-
-
 ## Test Coverage
 ```
 Name                                                      Stmts   Miss  Cover
