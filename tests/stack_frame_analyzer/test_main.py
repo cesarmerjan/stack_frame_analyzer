@@ -2,7 +2,13 @@ import inspect
 import unittest
 
 from src.stack_frame_analyzer import StackFrameAnalyzer
-from src.stack_frame_analyzer.exceptions import FrameDepthOutOfRange, InvalidFrameDepth
+from src.stack_frame_analyzer.exceptions import (
+    InvalidProjectNameType,
+    InvalidInstanceRepresentationNameType,
+    InvalidClassRepresentationNameType,
+    FrameDepthOutOfRange,
+    InvalidFrameDepth
+)
 
 
 class TestStackFrameAnalyzer(unittest.TestCase):
@@ -16,7 +22,7 @@ class TestStackFrameAnalyzer(unittest.TestCase):
         self.assertEqual(self.stack_frame_analyzer.project_name, "stack_frame_analyzer")
         self.assertEqual(
             self.stack_frame_analyzer.project_name,
-            self.stack_frame_analyzer.PROJECT_NAME,
+            self.stack_frame_analyzer.DEFAULT_PROJECT_NAME,
         )
         self.assertEqual(self.stack_frame_analyzer.instance_representation_name, "self")
         self.assertEqual(self.stack_frame_analyzer.class_representation_name, "cls")
@@ -103,25 +109,79 @@ class TestStackFrameAnalyzer(unittest.TestCase):
 
     def test_frame_out_of_range(self):
         with self.assertRaises(FrameDepthOutOfRange):
-            self.stack_frame_analyzer.get_frame_context(100)
+            self.stack_frame_analyzer.get_caller_context(100)
 
     def test_invalid_frame_depth(self):
         with self.assertRaises(InvalidFrameDepth):
-            self.stack_frame_analyzer.get_frame_context(-1)
+            self.stack_frame_analyzer.get_caller_context(-1)
 
         with self.assertRaises(InvalidFrameDepth):
-            self.stack_frame_analyzer.get_frame_context(b"OK")
+            self.stack_frame_analyzer.get_caller_context(b"OK")
         with self.assertRaises(InvalidFrameDepth):
-            self.stack_frame_analyzer.get_frame_context("2")
+            self.stack_frame_analyzer.get_caller_context("2")
         with self.assertRaises(InvalidFrameDepth):
-            self.stack_frame_analyzer.get_frame_context([])
+            self.stack_frame_analyzer.get_caller_context([])
         with self.assertRaises(InvalidFrameDepth):
-            self.stack_frame_analyzer.get_frame_context({})
+            self.stack_frame_analyzer.get_caller_context({})
         with self.assertRaises(InvalidFrameDepth):
-            self.stack_frame_analyzer.get_frame_context(set([]))
+            self.stack_frame_analyzer.get_caller_context(set([]))
         with self.assertRaises(InvalidFrameDepth):
-            self.stack_frame_analyzer.get_frame_context(1.2)
+            self.stack_frame_analyzer.get_caller_context(1.2)
         with self.assertRaises(InvalidFrameDepth):
-            self.stack_frame_analyzer.get_frame_context(lambda: "function")
+            self.stack_frame_analyzer.get_caller_context(lambda: "function")
         with self.assertRaises(InvalidFrameDepth):
-            self.stack_frame_analyzer.get_frame_context(type("MyClass", (object,), {}))
+            self.stack_frame_analyzer.get_caller_context(type("MyClass", (object,), {}))
+
+    def test_for_project_name_set_error(self):
+        with self.assertRaises(InvalidProjectNameType):
+            StackFrameAnalyzer(1)
+        with self.assertRaises(InvalidProjectNameType):
+            StackFrameAnalyzer([])
+        with self.assertRaises(InvalidProjectNameType):
+            StackFrameAnalyzer({})
+        with self.assertRaises(InvalidProjectNameType):
+            StackFrameAnalyzer(set([]))
+        with self.assertRaises(InvalidProjectNameType):
+            StackFrameAnalyzer(1.2)
+        with self.assertRaises(InvalidProjectNameType):
+            StackFrameAnalyzer(lambda: "function")
+        with self.assertRaises(InvalidProjectNameType):
+            StackFrameAnalyzer(type("MyClass", (object,), {}))
+        with self.assertRaises(InvalidProjectNameType):
+            StackFrameAnalyzer(True)
+
+    def test_for_instance_representation_name_set_error(self):
+        with self.assertRaises(InvalidInstanceRepresentationNameType):
+            StackFrameAnalyzer(instance_representation_name=1)
+        with self.assertRaises(InvalidInstanceRepresentationNameType):
+            StackFrameAnalyzer(instance_representation_name=[])
+        with self.assertRaises(InvalidInstanceRepresentationNameType):
+            StackFrameAnalyzer(instance_representation_name={})
+        with self.assertRaises(InvalidInstanceRepresentationNameType):
+            StackFrameAnalyzer(instance_representation_name=set([]))
+        with self.assertRaises(InvalidInstanceRepresentationNameType):
+            StackFrameAnalyzer(instance_representation_name=1.2)
+        with self.assertRaises(InvalidInstanceRepresentationNameType):
+            StackFrameAnalyzer(instance_representation_name=lambda: "function")
+        with self.assertRaises(InvalidInstanceRepresentationNameType):
+            StackFrameAnalyzer(instance_representation_name=type("MyClass", (object,), {}))
+        with self.assertRaises(InvalidInstanceRepresentationNameType):
+            StackFrameAnalyzer(instance_representation_name=True)
+
+    def test_for_class_representation_name_set_error(self):
+        with self.assertRaises(InvalidClassRepresentationNameType):
+            StackFrameAnalyzer(class_representation_name=1)
+        with self.assertRaises(InvalidClassRepresentationNameType):
+            StackFrameAnalyzer(class_representation_name=[])
+        with self.assertRaises(InvalidClassRepresentationNameType):
+            StackFrameAnalyzer(class_representation_name={})
+        with self.assertRaises(InvalidClassRepresentationNameType):
+            StackFrameAnalyzer(class_representation_name=set([]))
+        with self.assertRaises(InvalidClassRepresentationNameType):
+            StackFrameAnalyzer(class_representation_name=1.2)
+        with self.assertRaises(InvalidClassRepresentationNameType):
+            StackFrameAnalyzer(class_representation_name=lambda: "function")
+        with self.assertRaises(InvalidClassRepresentationNameType):
+            StackFrameAnalyzer(class_representation_name=type("MyClass", (object,), {}))
+        with self.assertRaises(InvalidClassRepresentationNameType):
+            StackFrameAnalyzer(class_representation_name=True)

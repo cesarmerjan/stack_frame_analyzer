@@ -16,17 +16,17 @@ class TestStackFrameAnalyzer(unittest.TestCase):
 
         tracemalloc.start()
 
-        stack_frame_analyzer.get_frame_context()
+        stack_frame_analyzer.get_caller_context()
 
         snapshot1 = tracemalloc.take_snapshot()
 
         for _ in range(10000):
-            stack_frame_analyzer.get_frame_context()
+            stack_frame_analyzer.get_caller_context()
 
         snapshot2 = tracemalloc.take_snapshot()
 
         for _ in range(10000):
-            stack_frame_analyzer.get_frame_context()
+            stack_frame_analyzer.get_caller_context()
 
         snapshot3 = tracemalloc.take_snapshot()
 

@@ -13,5 +13,5 @@ def foo_decotator(func):
 
 @foo_decotator
 def foo_decorated(baz):
-    context = stack_frame_analyzer.get_frame_context()
+    context = stack_frame_analyzer.get_caller_context()
     return context

@@ -14,7 +14,7 @@ class TestStackFrameAnalyzer(unittest.TestCase):
             "stack_frame_analyzer:tests.stack_frame_analyzer.utils:foo::foo(baz=baz)"
         )
 
-    def test_get_frame_context_with_threads(self):
+    def test_get_caller_context_with_threads(self):
         tasks = [
             Thread(target=solve_with_queue(foo, self.queue), args=("baz",))
             for _ in range(50)
@@ -36,7 +36,7 @@ class TestStackFrameAnalyzer(unittest.TestCase):
 
         self.assertEqual(context, self.expected_context)
 
-    def test_get_frame_context_with_threads_with_two_different_functions(self):
+    def test_get_caller_context_with_threads_with_two_different_functions(self):
 
         tasks_foo = [
             Thread(target=solve_with_queue(foo, self.queue), args=("baz",))

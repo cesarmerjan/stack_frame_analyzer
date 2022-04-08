@@ -16,7 +16,7 @@ An example of the context returned could be:
 ## Typical usage example:
 
 
-### With Caller's Stack Frame Depth 1
+### With Caller's Stack Frame Depth 0
 ```python
 stack_frame_analyzer = StackFrameAnalyzer("my_service_name")
 
@@ -24,17 +24,17 @@ def foo(bar):
     try:
         ...
     except Exception as error:
-        context = stack_frame_analyzer.get_frame_context()
+        context = stack_frame_analyzer.get_caller_context()
         logging.error(context)
 ```
 
-### With Caller's Stack Frame Depth 2
+### With Caller's Stack Frame Depth 1
 ```python
 stack_frame_analyzer = StackFrameAnalyzer("my_service_name")
 
 class MyException(Exception):
     def __init__(self):
-        self.context = stack_frame_analyzer.get_frame_context(stack_frame_depth=2)
+        self.context = stack_frame_analyzer.get_caller_context(depth_in_the_stack=1)
         super().__init__()
 
 
@@ -45,22 +45,23 @@ def foo(bar):
         logging.error(error.context)
 ```
 
-### With Caller's Stack Frame Depth 3
+### With Caller's Stack Frame Depth 2
 
 
 ------------
 
 ```python
 class ExceptionWithContext(Exception):
+    """
+    Base class to make exceptions capture the context of whoever raises them.
+    """
     def __init__(self, message: str):
         self.message = message
-        self.context = stack_frame_analyzer.get_frame_context(stack_frame_depth=3)
+        self.context = stack_frame_analyzer.get_caller_context(depth_in_the_stack=2)
         super().__init__(self.message)
 
 
 class FooException(ExceptionWithContext):
-    '''Foo Exception'''
-
     def __init__(self, message: str = "message"):
         self.message = message
         super().__init__(self.message)
@@ -79,13 +80,13 @@ Name                                                      Stmts   Miss  Cover
 -----------------------------------------------------------------------------
 src/__init__.py                                               1      0   100%
 src/stack_frame_analyzer/__init__.py                          2      0   100%
-src/stack_frame_analyzer/exceptions.py                       18      0   100%
-src/stack_frame_analyzer/main.py                             71      0   100%
+src/stack_frame_analyzer/exceptions.py                       36      0   100%
+src/stack_frame_analyzer/main.py                            100      0   100%
 tests/__init__.py                                             0      0   100%
 tests/stack_frame_analyzer/__init__.py                        0      0   100%
-tests/stack_frame_analyzer/test_exceptions.py                15      0   100%
+tests/stack_frame_analyzer/test_exceptions.py                27      0   100%
 tests/stack_frame_analyzer/test_in_class.py                  17      0   100%
-tests/stack_frame_analyzer/test_main.py                      80      0   100%
+tests/stack_frame_analyzer/test_main.py                     131      0   100%
 tests/stack_frame_analyzer/test_memory_leak.py               55      0   100%
 tests/stack_frame_analyzer/test_on_function.py               12      0   100%
 tests/stack_frame_analyzer/test_speed.py                      7      0   100%
@@ -105,5 +106,5 @@ tests/stack_frame_analyzer/utils/memory_leak.py               6      0   100%
 tests/stack_frame_analyzer/utils/parent.py                    8      0   100%
 tests/stack_frame_analyzer/utils/solve_with_queue.py          7      0   100%
 -----------------------------------------------------------------------------
-TOTAL                                                       409      0   100%
+TOTAL                                                       519      0   100%
 ```

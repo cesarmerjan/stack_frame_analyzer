@@ -10,7 +10,7 @@ Typical usage example:
 
 ---------------------------------------
 
-# Caller's Stack Frame Depth 1
+# Caller's Stack Frame Depth 0
 
 stack_frame_analyzer = StackFrameAnalyzer("my_service_name")
 
@@ -18,18 +18,18 @@ def foo(bar):
     try:
         ...
     except Exception as error:
-        context = stack_frame_analyzer.get_frame_context()
+        context = stack_frame_analyzer.get_caller_context()
         logging.error(context)
 
 ---------------------------------------
 
-# Caller's Stack Frame Depth 2
+# Caller's Stack Frame Depth 1
 
 stack_frame_analyzer = StackFrameAnalyzer("my_service_name")
 
 class MyException(Exception):
     def __init__(self):
-        self.context = stack_frame_analyzer.get_frame_context(stack_frame_depth=2)
+        self.context = stack_frame_analyzer.get_caller_context(depth_in_the_stack=1)
         super().__init__()
 
 
@@ -41,19 +41,20 @@ def foo(bar):
 
 ---------------------------------------
 
-# Caller's Stack Frame Depth 3
+# Caller's Stack Frame Depth 2
 
 
 class ExceptionWithContext(Exception):
+    '''
+    Base class to make exceptions capture the context of whoever raises them.
+    '''
     def __init__(self, message: str):
         self.message = message
-        self.context = stack_frame_analyzer.get_frame_context(stack_frame_depth=3)
+        self.context = stack_frame_analyzer.get_caller_context(depth_in_the_stack=2)
         super().__init__(self.message)
 
 
 class FooException(ExceptionWithContext):
-    '''Foo Exception'''
-
     def __init__(self, message: str = "message"):
         self.message = message
         super().__init__(self.message)
@@ -76,6 +77,9 @@ from types import FrameType
 from typing import Tuple
 
 from .exceptions import (
+    InvalidProjectNameType,
+    InvalidInstanceRepresentationNameType,
+    InvalidClassRepresentationNameType,
     FrameDepthOutOfRange,
     InvalidFrameDepth,
     StackFrameAnalyzerException,
@@ -85,7 +89,7 @@ from .exceptions import (
 class StackFrameAnalyzer:
     """Help to get the context of a frame on the caller's stack, using only the builtin modules.
     This is a thread-safe implementation.
-    The main method to use is get_frame_context that return the context of selected frame of the caller's stack.
+    The main method to use is get_caller_context that return the context of selected caller.
 
 
     The main builtin functions used are:
@@ -111,13 +115,13 @@ class StackFrameAnalyzer:
     """
 
     __slots__ = (
-        "project_name",
-        "instance_representation_name",
-        "class_representation_name",
-        "context_structure",
+        "_project_name",
+        "_instance_representation_name",
+        "_class_representation_name",
     )
 
-    PROJECT_NAME: str = os.path.split(os.path.abspath(os.curdir))[-1]
+    DEFAULT_PROJECT_NAME: str = os.path.split(os.path.abspath(os.curdir))[-1]
+    CONTEXT_STRUCTURE = "{project_name}:{package}:{module}:{class_name}:{callable_name}({arguments})"
 
     def __init__(
         self,
@@ -125,10 +129,44 @@ class StackFrameAnalyzer:
         instance_representation_name: str = "self",
         class_representation_name: str = "cls",
     ) -> "StackFrameAnalyzer":
-        self.project_name = project_name or self.PROJECT_NAME
+        self._project_name = None
+        self.project_name = project_name
+        self._instance_representation_name = None
         self.instance_representation_name = instance_representation_name
+        self._class_representation_name = None
         self.class_representation_name = class_representation_name
-        self.context_structure = "{project_name}:{package}:{module}:{class_name}:{callable_name}({arguments})"
+
+    @property
+    def project_name(self) -> str:
+        return self._project_name
+
+    @project_name.setter
+    def project_name(self, project_name: str) -> None:
+        if project_name is None:
+            project_name = self.DEFAULT_PROJECT_NAME
+        if not isinstance(project_name, str):
+            raise InvalidProjectNameType
+        self._project_name = project_name
+
+    @property
+    def instance_representation_name(self) -> str:
+        return self._instance_representation_name
+
+    @instance_representation_name.setter
+    def instance_representation_name(self, instance_representation_name: str) -> None:
+        if not isinstance(instance_representation_name, str):
+            raise InvalidInstanceRepresentationNameType
+        self._instance_representation_name = instance_representation_name
+
+    @property
+    def class_representation_name(self) -> str:
+        return self._class_representation_name
+
+    @class_representation_name.setter
+    def class_representation_name(self, class_representation_name: str) -> None:
+        if not isinstance(class_representation_name, str):
+            raise InvalidClassRepresentationNameType
+        self._class_representation_name = class_representation_name
 
     def _get_frame(self, stack_frame_depth: int) -> FrameType:
         """Get a frame from the caller stack.
@@ -143,10 +181,9 @@ class StackFrameAnalyzer:
             FrameType: built-in FrameType
         """
         try:
-            frame = sys._getframe(stack_frame_depth)
+            return sys._getframe(stack_frame_depth)
         except ValueError as error:
             raise FrameDepthOutOfRange from error
-        return frame
 
     def _get_package_and_module(self, frame: FrameType) -> Tuple[str, str]:
         module_obj = inspect.getmodule(frame)
@@ -215,7 +252,7 @@ class StackFrameAnalyzer:
         callable_name: str,
         arguments: str,
     ) -> str:
-        context = self.context_structure.format(
+        context = self.CONTEXT_STRUCTURE.format(
             project_name=self.project_name,
             package=package,
             module=module,
@@ -225,10 +262,14 @@ class StackFrameAnalyzer:
         )
         return context
 
-    def get_frame_context(self, stack_frame_depth: int = 1) -> str:
-        f"""Get the context of select frame.
+    def get_caller_context(self, depth_in_the_stack: int = 0) -> str:
+        f"""Get the context of selected caller.
         The structure of the context is:
-          {self.context_structure}.
+          {self.CONTEXT_STRUCTURE}.
+
+        For the caller deapth count start in the source code outside of the StackFrameAnalyzer class,
+        the stack_frame_depth will be equal the depth_in_the_stack plus 2.
+        So, if the value of depth_in_the_stack is zero, the caller will be the source code that invokes this method.
 
         Even though the frame only exists as a local variable,
         the reference cycles created when the frame object is referenceated
@@ -236,7 +277,7 @@ class StackFrameAnalyzer:
         which can cause increased of memory consumption.
 
         Args:
-            stack_frame_depth (int): Frame index below the top of the caller's stack. Defaults to 1.
+            depth_in_the_stack (int):  Depth of the caller in the stack. Defaults is 0.
 
         Raises:
             InvalidFrameDepth: Invalid stack_frame_depth input value.
@@ -247,10 +288,12 @@ class StackFrameAnalyzer:
             str: A string with the context of the selected frame.
         """
 
-        if not isinstance(stack_frame_depth, int) or stack_frame_depth < 0:
+        if not isinstance(depth_in_the_stack, int) or depth_in_the_stack < 0:
             raise InvalidFrameDepth
 
-        frame = self._get_frame(stack_frame_depth + 1)
+        stack_frame_depth = depth_in_the_stack + 2
+
+        frame = self._get_frame(stack_frame_depth)
 
         try:
             package, module = self._get_package_and_module(frame)
