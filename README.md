@@ -72,3 +72,40 @@ def foo(bar):
     except FooException as error:
         logging.error(error.context)
 ```
+
+
+
+## Test Coverage
+```
+Name                                                      Stmts   Miss  Cover
+-----------------------------------------------------------------------------
+src/__init__.py                                               1      0   100%
+src/stack_frame_analyzer/__init__.py                          2      0   100%
+src/stack_frame_analyzer/exceptions.py                       18      0   100%
+src/stack_frame_analyzer/main.py                             71      0   100%
+tests/__init__.py                                             0      0   100%
+tests/stack_frame_analyzer/__init__.py                        0      0   100%
+tests/stack_frame_analyzer/test_exceptions.py                15      0   100%
+tests/stack_frame_analyzer/test_in_class.py                  17      0   100%
+tests/stack_frame_analyzer/test_main.py                      80      0   100%
+tests/stack_frame_analyzer/test_memory_leak.py               55      0   100%
+tests/stack_frame_analyzer/test_on_function.py               12      0   100%
+tests/stack_frame_analyzer/test_speed.py                      7      0   100%
+tests/stack_frame_analyzer/test_with_decorator.py             8      0   100%
+tests/stack_frame_analyzer/test_with_depth_two_frame.py      13      0   100%
+tests/stack_frame_analyzer/test_with_exception.py             8      0   100%
+tests/stack_frame_analyzer/test_with_threads.py              33      0   100%
+tests/stack_frame_analyzer/utils/__init__.py                  0      0   100%
+tests/stack_frame_analyzer/utils/bar.py                       4      0   100%
+tests/stack_frame_analyzer/utils/baz.py                      13      0   100%
+tests/stack_frame_analyzer/utils/child.py                     7      0   100%
+tests/stack_frame_analyzer/utils/foo.py                       4      0   100%
+tests/stack_frame_analyzer/utils/foo_with_decorator.py       11      0   100%
+tests/stack_frame_analyzer/utils/foo_with_exception.py        7      0   100%
+tests/stack_frame_analyzer/utils/main.py                      2      0   100%
+tests/stack_frame_analyzer/utils/memory_leak.py               6      0   100%
+tests/stack_frame_analyzer/utils/parent.py                    8      0   100%
+tests/stack_frame_analyzer/utils/solve_with_queue.py          7      0   100%
+-----------------------------------------------------------------------------
+TOTAL                                                       409      0   100%
+```
