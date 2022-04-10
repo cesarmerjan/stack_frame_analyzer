@@ -138,6 +138,17 @@ class StackFrameAnalyzer:
         self._class_representation_name = None
         self.class_representation_name = class_representation_name
 
+    def __str__(self) -> str:
+        return f"stack_frame_analyzer"
+
+    def __repr__(self) -> str:
+        msg = "StackFrameAnalyzer("
+        msg += f"project_name={self.project_name}, "
+        msg += f"instance_representation_name={self.instance_representation_name}, "
+        msg += f"class_representation_name={self.class_representation_name}"
+        msg += ")"
+        return msg
+
     @property
     def project_name(self) -> str:
         return self._project_name
